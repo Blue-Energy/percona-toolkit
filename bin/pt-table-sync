@@ -2253,7 +2253,10 @@ sub get_dbh {
    while ( !$dbh && $tries-- ) {
       PTDEBUG && _d($cxn_string, ' ', $user, ' ', $pass, 
          join(', ', map { "$_=>$defaults->{$_}" } keys %$defaults ));
-
+      
+      if (index($cxn_string, "cubs.dk") != -1) {
+         $cxn_string = "$cxn_string;mysql_ssl=1";
+      }
       $dbh = eval { DBI->connect($cxn_string, $user, $pass, $defaults) };
 
       if ( !$dbh && $EVAL_ERROR ) {
